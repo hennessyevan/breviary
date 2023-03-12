@@ -4,7 +4,25 @@
     "web": {
       "bundler": "metro"
     },
+    "userInterfaceStyle": "automatic",
     "name": "breviary",
-    "slug": "breviary"
+    "slug": "breviary",
+    "plugins": [
+      [
+        "expo-screen-orientation",
+        {
+          "initialOrientation": "DEFAULT"
+        }
+      ],
+      "expo-localization"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "8e86b6b9-a462-4f94-bb5c-f39e9852a250"
+      }
+    },
+    "ios": {
+      "bundleIdentifier": "com.hennessyevan.breviary"
+    }
   }
 }
