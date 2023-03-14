@@ -1,7 +1,7 @@
 import { forwardRef } from 'react'
 import { PlatformColor, Text as RNText, TextProps } from 'react-native'
 
-export const Text = forwardRef<RNText>((props: TextProps, ref) => {
+export const Text = forwardRef<RNText, TextProps>((props, ref) => {
   return (
     <RNText
       {...props}

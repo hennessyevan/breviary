@@ -3,8 +3,8 @@ import { Button as RNButton } from 'react-native'
 import { LITURGY_COLORS } from '../constants/colors'
 import { useRomanCalendar } from './calendar'
 
-export const Button = forwardRef<RNButton>(
-  (props: ComponentProps<typeof RNButton>, ref) => {
+export const Button = forwardRef<RNButton, ComponentProps<typeof RNButton>>(
+  (props, ref) => {
     const { getLiturgicalDay } = useRomanCalendar()
     const currentDay = getLiturgicalDay()
 
