@@ -2,10 +2,18 @@ import { useTheme } from '@react-navigation/native'
 import { format, set, setMonth } from 'date-fns'
 import { Link, Stack } from 'expo-router'
 import { useTranslation } from 'react-i18next'
-import { PlatformColor, SafeAreaView, ScrollView, View } from 'react-native'
+import {
+  PlatformColor,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native'
 import { Button, Text } from '../components'
 import { useRomanCalendar } from '../components/calendar'
+import { HourTile } from '../components/HourTile'
 import { LITURGY_COLORS } from '../constants/colors'
+import { Hour } from '../data'
 
 export default function Page() {
   const { colors } = useTheme()
@@ -47,12 +55,19 @@ export default function Page() {
             {format(new Date(), 'EEEE')} {t(currentDay?.cycles.psalterWeekName)}
           </Text>
         </View>
-        {['or', 'mp', 'dt', 'ep', 'com'].map((time) => (
-          <Link key={time} asChild href={`/hour/${time}`}>
-            <Button title={t(time)} />
-          </Link>
-        ))}
+        <View style={styles.tileList}>
+          {['or', 'mp', 'dt', 'ep', 'com'].map((time) => (
+            <HourTile key={time} time={time as Hour['time']} />
+          ))}
+        </View>
       </SafeAreaView>
     </ScrollView>
   )
 }
+
+const styles = StyleSheet.create({
+  tileList: {
+    flexDirection: 'column',
+    gap: 12,
+  },
+})

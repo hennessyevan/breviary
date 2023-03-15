@@ -62,6 +62,7 @@ function InnerLayout() {
             fontFamily: 'New York Bold',
             color: PlatformColor('label') as unknown as string,
           },
+          presentation: 'fullScreenModal',
           headerTintColor: LITURGY_COLORS[
             currentDay?.colors[0]
           ] as unknown as string,
@@ -78,7 +79,9 @@ function InnerLayout() {
             backgroundColor: PlatformColor('systemBackground'),
           },
         }}
-      />
+      >
+        <Stack.Screen name="hour/[time]" options={{ headerShown: false }} />
+      </Stack>
     </ThemeProvider>
   )
 }

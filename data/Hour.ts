@@ -19,53 +19,82 @@ export interface Hour {
   properId: number | null
 }
 
-export function useGetHour(time: Hour['time']) {
+type Relation = {
+  tableName: string
+  foreignKey: string
+  relation: string
+}
+
+export function useGetHour({
+  id,
+  week,
+  time,
+}: Partial<Pick<Hour, 'time' | 'id' | 'week' | 'weekday'>>) {
   const db = useDB()
 
   return useQuery('hour', async () => {
-    return new Promise<Hour>((resolve, reject) => {
-      db.transaction((tx) => {
+    const hourPromise = await new Promise<Hour>((resolve, reject) => {
+      db.readTransaction((tx) =>
         tx.executeSql(
           `--sql
           select * from Hour
           where time = ?
-          limit 1
-          ;`,
-          [time],
-          (tx, { rows: { _array } }) => {
-            let hour = _array[0]
-
-            tx.executeSql(
-              `--sql
-              select * from Hymn
-              where id = ?
-              limit 1
-              ;`,
-              [hour.hymnId],
-              (tx, { rows: { _array } }) => {
-                hour.hymn = _array[0]
-
-                tx.executeSql(
-                  `--sql
-                  select * from Invitatory
-                  where id = ?
-                  limit 1
-                  ;`,
-                  [hour.invitatoryId],
-                  (_, { rows: { _array } }) => {
-                    hour.invitatory = _array[0]
-                    resolve(hour)
-                  }
-                )
-              }
-            )
+          and week = ?
+          limit 1;`,
+          [time, week],
+          (_, { rows: { _array } }) => {
+            resolve(_array[0] as Hour)
           },
           (_, error) => {
             reject(error)
             return true
           }
         )
+      )
+    })
+
+    const relationsConfig = [
+      {
+        tableName: 'Hymn',
+        foreignKey: 'hymnId',
+        relation: 'hymn',
+      },
+      {
+        tableName: 'Invitatory',
+        foreignKey: 'invitatoryId',
+        relation: 'invitatory',
+      },
+    ]
+
+    const relationPromises = relationsConfig.map(
+      async ({ tableName, foreignKey, relation }) => {
+        return new Promise((resolve, reject) => {
+          db.readTransaction((tx) => {
+            tx.executeSql(
+              `--sql
+            select * from ${tableName}
+            where id = ?
+            limit 1;`,
+              [hourPromise[foreignKey]],
+              (_, { rows: { _array } }) => {
+                resolve(_array[0])
+              },
+              (_, error) => {
+                reject(error)
+                return true
+              }
+            )
+          })
+        })
+      }
+    )
+
+    await Promise.all(relationPromises).then((relations) => {
+      relations.forEach((relation, index) => {
+        hourPromise[relationsConfig[index].relation] = relation
       })
     })
+
+    return hourPromise
   })
 }

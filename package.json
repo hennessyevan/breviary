@@ -37,7 +37,8 @@
     "react-native-web": "~0.18.7",
     "react-query": "^3.39.3",
     "romcal": "^3.0.0-dev.32",
-    "typescript": "^4.9.4"
+    "typescript": "^4.9.4",
+    "react-native-pager-view": "6.1.2"
   },
   "devDependencies": {
     "@babel/core": "^7.19.3",
