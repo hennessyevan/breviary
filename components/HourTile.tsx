@@ -19,7 +19,7 @@ export function HourTile({ time }: HourTileProps) {
       })}
     >
       <Pressable>
-        <Text style={styles.text}>{t(time)}</Text>
+        <Text style={styles.text}>{t(`time.${time}`)}</Text>
       </Pressable>
     </Link>
   )
@@ -31,10 +31,10 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 16,
     paddingVertical: 24,
-    backgroundColor: PlatformColor('systemGray5'),
+    backgroundColor: PlatformColor('systemGray6'),
   },
   containerPressed: {
-    backgroundColor: PlatformColor('systemGray4'),
+    backgroundColor: PlatformColor('systemGray5'),
   },
   text: {
     fontSize: 16,

@@ -2,7 +2,6 @@ import { Asset } from 'expo-asset'
 import * as FileSystem from 'expo-file-system'
 import * as SQLite from 'expo-sqlite'
 import { createContext, useContext, useEffect, useState } from 'react'
-import { DataStore } from './DataStore'
 
 const DataContext = createContext<SQLite.WebSQLDatabase>(null)
 
@@ -20,18 +19,18 @@ export function DBProvider({ children }) {
 
     const databaseExists = (
       await FileSystem.getInfoAsync(
-        FileSystem.documentDirectory + 'SQLite/dev.sqlite'
+        FileSystem.documentDirectory + 'SQLite/hours.sqlite'
       )
     ).exists
 
     if (!databaseExists) {
       await FileSystem.downloadAsync(
-        Asset.fromModule(require('../data/dev.sqlite')).uri,
-        FileSystem.documentDirectory + 'SQLite/dev.sqlite'
+        Asset.fromModule(require('../data/hours.sqlite')).uri,
+        FileSystem.documentDirectory + 'SQLite/hours.sqlite'
       )
     }
 
-    const db = SQLite.openDatabase('dev.sqlite')
+    const db = SQLite.openDatabase('hours.sqlite')
     globalThis.db = db
 
     return db

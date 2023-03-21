@@ -1,15 +1,16 @@
-import { format } from 'date-fns'
+import { format, parse } from 'date-fns'
 import { SplashScreen } from 'expo-router'
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import RomCal, { LiturgicalCalendar, LiturgicalDay } from 'romcal'
-import { Canada_En } from '@romcal/calendar.canada'
+import {} from '@romcal/calendar.canada'
+import { UnitedStates_En } from '@romcal/calendar.united-states'
 
 export const RomanCalendarContext = createContext<LiturgicalCalendar>(null)
 
 export function RomanCalendarProvider({ children }) {
   const romcal = new RomCal({
     scope: 'liturgical',
-    localizedCalendar: Canada_En,
+    localizedCalendar: UnitedStates_En,
   })
   const [calendar, setCalendar] = useState<LiturgicalCalendar>({})
 
@@ -33,6 +34,23 @@ export function RomanCalendarProvider({ children }) {
 export function useRomanCalendar() {
   const calendar = useContext(RomanCalendarContext)
 
+  function getStartOfLiturgicalYear() {
+    return parse(
+      Object.values(calendar).flat()[0].date,
+      'yyyy-MM-dd',
+      new Date()
+    )
+  }
+
+  function getWeekOfLiturgicalYear(date = new Date()) {
+    const startOfLiturgicalYear = getStartOfLiturgicalYear()
+    const daysSinceStart = Math.floor(
+      (date.getTime() - startOfLiturgicalYear.getTime()) / (1000 * 3600 * 24)
+    )
+
+    return Math.floor(daysSinceStart / 7)
+  }
+
   function getLiturgicalDay(date = new Date()): LiturgicalDay {
     const dateString = format(date, 'yyyy-MM-dd')
 
@@ -41,5 +59,13 @@ export function useRomanCalendar() {
       .find((d) => d.date === dateString)
   }
 
-  return { calendar, getLiturgicalDay }
+  const currentDay = useMemo(() => getLiturgicalDay(), [])
+
+  return {
+    calendar,
+    currentDay,
+    getLiturgicalDay,
+    getStartOfLiturgicalYear,
+    getWeekOfLiturgicalYear,
+  }
 }

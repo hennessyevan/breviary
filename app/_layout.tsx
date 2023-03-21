@@ -1,21 +1,26 @@
 import { ThemeProvider, useTheme } from '@react-navigation/native'
 import { useFonts } from 'expo-font'
 import { SplashScreen, Stack } from 'expo-router'
-import { PlatformColor } from 'react-native'
+import { PlatformColor, useColorScheme } from 'react-native'
+import { QueryClient, QueryClientProvider } from 'react-query'
+import { TamaguiProvider, Theme } from 'tamagui'
 import { RomanCalendarProvider, useRomanCalendar } from '../components/calendar'
 import { darkTheme, lightTheme } from '../components/theme'
 import { LITURGY_COLORS } from '../constants/colors'
 import { DBProvider, useDB } from '../data/dataContext'
-import { QueryClient, QueryClientProvider } from 'react-query'
+import config from '../tamagui.config'
 
 SplashScreen.preventAutoHideAsync()
 
 const queryClient = new QueryClient()
 
 export default function Layout() {
+  const colorScheme = useColorScheme()
   const [fontsLoaded] = useFonts({
     'New York': require('../assets/fonts/NewYork.ttf'),
-    'New York Bold': require('../assets/fonts/NewYorkMedium-Semibold.otf'),
+    'New York Semibold': require('../assets/fonts/NewYorkMedium-Semibold.otf'),
+    'New York Bold': require('../assets/fonts/NewYorkMedium-Bold.otf'),
+    'New York Italic': require('../assets/fonts/NewYorkItalic.ttf'),
   })
 
   if (!fontsLoaded) {
@@ -23,13 +28,17 @@ export default function Layout() {
   }
 
   return (
-    <DBProvider>
-      <QueryClientProvider client={queryClient}>
-        <RomanCalendarProvider>
-          <InnerLayout />
-        </RomanCalendarProvider>
-      </QueryClientProvider>
-    </DBProvider>
+    <TamaguiProvider config={config} key={colorScheme}>
+      <Theme name={colorScheme}>
+        <DBProvider>
+          <QueryClientProvider client={queryClient}>
+            <RomanCalendarProvider>
+              <InnerLayout />
+            </RomanCalendarProvider>
+          </QueryClientProvider>
+        </DBProvider>
+      </Theme>
+    </TamaguiProvider>
   )
 }
 
@@ -59,7 +68,7 @@ function InnerLayout() {
           headerLargeTitleShadowVisible: false,
           headerBlurEffect: 'regular',
           headerLargeTitleStyle: {
-            fontFamily: 'New York Bold',
+            fontFamily: 'New York Semibold',
             color: PlatformColor('label') as unknown as string,
           },
           presentation: 'fullScreenModal',
@@ -67,7 +76,7 @@ function InnerLayout() {
             currentDay?.colors[0]
           ] as unknown as string,
           headerTitleStyle: {
-            fontFamily: 'New York Bold',
+            fontFamily: 'New York Semibold',
             color: PlatformColor('label') as unknown as string,
           },
           headerLargeStyle: {

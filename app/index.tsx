@@ -9,11 +9,12 @@ import {
   StyleSheet,
   View,
 } from 'react-native'
-import { Button, Text } from '../components'
+import { Text } from '../components'
 import { useRomanCalendar } from '../components/calendar'
 import { HourTile } from '../components/HourTile'
 import { LITURGY_COLORS } from '../constants/colors'
 import { Hour } from '../data'
+import { Time } from '../data/Hour'
 
 export default function Page() {
   const { colors } = useTheme()
@@ -29,7 +30,7 @@ export default function Page() {
     >
       <Stack.Screen
         options={{
-          title: 'Breviary',
+          title: 'Liturgy of the Hours',
           orientation: 'portrait_up',
           headerTintColor: colors.primary,
         }}
@@ -43,20 +44,17 @@ export default function Page() {
             paddingTop: 8,
           }}
         >
-          <Text
-            style={{
-              fontWeight: '600',
-              fontSize: 13,
-              color: LITURGY_COLORS[currentDay?.colors[0]],
-            }}
-          >
+          <Text color={LITURGY_COLORS[currentDay?.colors[0]]} fontWeight="600">
             {t(currentDay?.seasonNames[0])}
             {' － '}
             {format(new Date(), 'EEEE')} {t(currentDay?.cycles.psalterWeekName)}
           </Text>
         </View>
         <View style={styles.tileList}>
-          {['or', 'mp', 'dt', 'ep', 'com'].map((time) => (
+          {[
+            // Time.OFFICE_OF_READINGS,
+            Time.MORNING_PRAYER,
+          ].map((time) => (
             <HourTile key={time} time={time as Hour['time']} />
           ))}
         </View>
@@ -69,5 +67,6 @@ const styles = StyleSheet.create({
   tileList: {
     flexDirection: 'column',
     gap: 12,
+    marginTop: 16,
   },
 })

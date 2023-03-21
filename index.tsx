@@ -1,3 +1,5 @@
 import 'intl-pluralrules'
 import './locale/i18n'
 import 'expo-router/entry'
+import 'react-native-reanimated'
+import 'react-native-gesture-handler'

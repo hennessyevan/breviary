@@ -1,10 +1,18 @@
 {
   "translation": {
-    "or": "Office of Readings",
-    "dt": "Daytime Prayer",
-    "mp": "Morning Prayer",
-    "ep": "Evening Prayer",
-    "com": "Night Prayer",
-    "ep1": "Evening Prayer 1"
+    "time": {
+      "OFFICE_OF_READINGS": "Office of Readings",
+      "MORNING_PRAYER": "Morning Prayer",
+      "EVENING_PRAYER": "Evening Prayer",
+      "INVITATORY": "Invitatory",
+      "DAYTIME_PRAYER": "Daytime Prayer",
+      "MID_MORNING_PRAYER": "Mid-Morning Prayer",
+      "MIDDAY_PRAYER": "Midday Prayer",
+      "MID_AFTERNOON_PRAYER": "Mid-Afternoon Prayer",
+      "NIGHT_PRAYER": "Night Prayer"
+    },
+    "MORNING_PRAYER": {
+      "begin": "God, come to my assistance.\n<red>—</red> Lord, make haste to help me.\n\nGlory to the Father, and to the Son, and to the Holy Spirit:\n<red>—</red> as it was in the beginning, is now, and will be for ever. Amen."
+    }
   }
 }
